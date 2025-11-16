@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student_list/models/user.dart';
 import 'package:student_list/services/api_service.dart';
+import 'package:student_list/widgets/user_list_item.dart';
 
 class UsersListScreen extends StatefulWidget {
   const UsersListScreen({super.key});
@@ -20,7 +21,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
     loadUsers();
   }
 
-  loadUsers() async {
+  Future<void>loadUsers() async {
     if (!mounted) return;
 
     setState(() {
@@ -46,6 +47,71 @@ class _UsersListScreenState extends State<UsersListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+
+    return Scaffold(
+      body: isLoading
+          ? Center(child: CircularProgressIndicator(color: Colors.blueGrey))
+          : users.isEmpty
+          ? Center(
+              child: Column(
+                children: [
+                  Icon(Icons.people_outline, color: Colors.blueGrey),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No Users Found!',
+                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                      color: Colors.blueGrey,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Tap + button to add a new student',
+                    style: TextStyle(color: Colors.blueGrey),
+                  ),
+                ],
+              ),
+            )
+          : RefreshIndicator(
+              onRefresh: loadUsers,
+              child: CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    title: Text('Student List'),
+                    floating: true,
+                    snap: true,
+                    pinned: false,
+                  ),
+                  SliverPadding(
+                    padding: EdgeInsets.only(bottom: bottomPadding + 100),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        childCount: users.length,
+                        (context, index) {
+                          final user = users[index];
+                          return UserListItem(
+                            user: user,
+                            onTap: () {},
+                            onDismissed: () {},
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+      floatingActionButton: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: FloatingActionButton.extended(
+            onPressed: () {},
+            icon: Icon(Icons.add),
+            label: Text('Add Student'),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
   }
 }
