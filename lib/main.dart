@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:student_list/app.dart';
 import 'package:student_list/screens/users_list_screen.dart';
 
 void main() {
@@ -15,13 +16,4 @@ void main() {
     ),
   );
   runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const UsersListScreen();
-  }
 }
