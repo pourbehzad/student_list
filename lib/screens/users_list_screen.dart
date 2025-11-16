@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:student_list/models/user.dart';
+import 'package:student_list/screens/user_edit_screen.dart';
 import 'package:student_list/services/api_service.dart';
 import 'package:student_list/widgets/user_list_item.dart';
 
@@ -21,7 +22,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
     loadUsers();
   }
 
-  Future<void>loadUsers() async {
+  Future<void> loadUsers() async {
     if (!mounted) return;
 
     setState(() {
@@ -42,6 +43,16 @@ class _UsersListScreenState extends State<UsersListScreen> {
       setState(() {
         isLoading = false;
       });
+    }
+  }
+
+  void _navigateAndRefresh(Widget screen) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => screen),
+    );
+    if (result == true) {
+      loadUsers();
     }
   }
 
@@ -91,7 +102,9 @@ class _UsersListScreenState extends State<UsersListScreen> {
                           final user = users[index];
                           return UserListItem(
                             user: user,
-                            onTap: () {},
+                            onTap: () {
+                              _navigateAndRefresh(UserEditScreen(user: user,));
+                            },
                             onDismissed: () {},
                           );
                         },
@@ -105,7 +118,9 @@ class _UsersListScreenState extends State<UsersListScreen> {
         child: Padding(
           padding: const EdgeInsets.only(bottom: 16),
           child: FloatingActionButton.extended(
-            onPressed: () {},
+            onPressed: () {
+              _navigateAndRefresh(UserEditScreen());
+            },
             icon: Icon(Icons.add),
             label: Text('Add Student'),
           ),
