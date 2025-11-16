@@ -33,9 +33,12 @@ class _UsersListScreenState extends State<UsersListScreen> {
       users = await apiService.getUsers();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error fetching data: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error fetching data: $e'),
+            backgroundColor: Colors.red.shade300,
+          ),
+        );
       }
     }
 
@@ -53,6 +56,32 @@ class _UsersListScreenState extends State<UsersListScreen> {
     );
     if (result == true) {
       loadUsers();
+    }
+  }
+
+  Future<void> deletUser(String id) async {
+    if (!mounted) return;
+
+    try {
+      await apiService.deletUser(id);
+      // await loadUsers(); // optional
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('User deleted successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error fetching data: $e'),
+            backgroundColor: Colors.red.shade300,
+          ),
+        );
+      }
     }
   }
 
@@ -103,9 +132,11 @@ class _UsersListScreenState extends State<UsersListScreen> {
                           return UserListItem(
                             user: user,
                             onTap: () {
-                              _navigateAndRefresh(UserEditScreen(user: user,));
+                              _navigateAndRefresh(UserEditScreen(user: user));
                             },
-                            onDismissed: () {},
+                            onDismissed: () {
+                              deletUser(user.id);
+                            },
                           );
                         },
                       ),
