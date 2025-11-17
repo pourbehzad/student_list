@@ -95,6 +95,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
           : users.isEmpty
           ? Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.people_outline, color: Colors.blueGrey),
                   const SizedBox(height: 16),

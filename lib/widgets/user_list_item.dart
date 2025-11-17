@@ -80,7 +80,7 @@ class UserListItem extends StatelessWidget {
             radius: 25,
             backgroundColor: _getAvatarColor(user.id),
             child: Text(
-              user.name.isNotEmpty ? user.name[0] : '',
+              user.name.isNotEmpty ? user.name[0].toUpperCase() : '',
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
