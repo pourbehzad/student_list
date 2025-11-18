@@ -12,11 +12,21 @@ class UserEditScreen extends StatefulWidget {
 class _UserEditScreenState extends State<UserEditScreen> {
   final GlobalKey<FormState> formkey = GlobalKey();
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController courseController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
 
   saveUser() {}
 
   bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if(widget.user != null){
+      nameController.text = widget.user!.name;
+      phoneController.text = widget.user!.number;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +58,14 @@ class _UserEditScreenState extends State<UserEditScreen> {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
-                  controller: courseController,
+                  controller: phoneController,
                   decoration: InputDecoration(
-                    labelText: 'Course',
-                    prefixIcon: Icon(Icons.location_city_rounded),
+                    labelText: 'Phone',
+                    prefixIcon: Icon(Icons.phone),
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please Enter a Course';
+                      return 'Please Enter a Phone Number';
                     }
                     return null;
                   },
