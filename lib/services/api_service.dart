@@ -18,12 +18,12 @@ class ApiService {
   Future<User> createUsers(
     String name,
     String number,
-    List<String> courses,
+    // List<String> courses,
   ) async {
     try {
       Response response = await dio.post(
         '/student',
-        data: {'name': name, 'number': number, 'courses': courses},
+        data: {'name': name, 'number': number, },
       );
       return User.fromJson(response.data);
     } catch (e) {
@@ -35,12 +35,12 @@ class ApiService {
     String id,
     String name,
     String number,
-    List<String> courses,
+    // List<String> courses,
   ) async {
     try {
       Response response = await dio.put(
         '/student/$id',
-        data: {'name': name, 'number': number, 'courses': courses},
+        data: {'name': name, 'number': number, },
       );
       return User.fromJson(response.data);
     } catch (e) {
