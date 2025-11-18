@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:student_list/models/user.dart';
+import 'package:student_list/services/api_service.dart';
 
 class UserEditScreen extends StatefulWidget {
   final User? user;
@@ -13,16 +14,71 @@ class _UserEditScreenState extends State<UserEditScreen> {
   final GlobalKey<FormState> formkey = GlobalKey();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
-
-  saveUser() {}
-
+  // final TextEditingController courseController = TextEditingController();
   bool isLoading = false;
+  ApiService apiService = ApiService();
+
+  Future<void> saveUser() async {
+    if (!formkey.currentState!.validate() || !mounted) return;
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      if (widget.user == null) {
+        //  add student
+        await apiService.createUsers(nameController.text, phoneController.text, );
+        if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('New Student Added Successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+
+      } else {
+
+        //  edit student
+        await apiService.updateUser(widget.user!.id, nameController.text, phoneController.text);
+        if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Student Updated'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+
+      }
+
+      if(mounted){
+        Navigator.pop(context, true);
+      }
+
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error Saving Data: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   void initState() {
     super.initState();
 
-    if(widget.user != null){
+    if (widget.user != null) {
       nameController.text = widget.user!.name;
       phoneController.text = widget.user!.number;
     }
@@ -60,7 +116,7 @@ class _UserEditScreenState extends State<UserEditScreen> {
                 TextFormField(
                   controller: phoneController,
                   decoration: InputDecoration(
-                    labelText: 'Phone',
+                    labelText: 'Phone Number',
                     prefixIcon: Icon(Icons.phone),
                   ),
                   validator: (value) {
@@ -69,9 +125,22 @@ class _UserEditScreenState extends State<UserEditScreen> {
                     }
                     return null;
                   },
-                  textInputAction: TextInputAction.done,
+                  textInputAction: TextInputAction.next,
                   onFieldSubmitted: (_) => saveUser(),
                 ),
+                // const SizedBox(height: 20,),
+                // TextFormField(
+                //   controller: courseController,
+                //   decoration: InputDecoration(
+                //     labelText: 'Courses',
+                //     prefixIcon: Icon(Icons.menu_book_sharp)
+                //   ),
+                //   validator: (value) {
+                //     if(value == null || value.trim().isEmpty){
+                //       return 'Please Enter ';
+                //     }
+                //   },
+                // ),
                 const SizedBox(height: 23),
                 ElevatedButton(
                   onPressed: isLoading ? null : saveUser,
@@ -96,5 +165,13 @@ class _UserEditScreenState extends State<UserEditScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    phoneController.dispose();
+    super.dispose();
+
   }
 }
