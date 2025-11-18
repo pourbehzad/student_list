@@ -40,6 +40,7 @@ class UserListItem extends StatelessWidget {
       direction: DismissDirection.endToStart,
       key: Key(user.id),
       background: Container(
+        alignment: Alignment.centerRight,
         padding: EdgeInsets.only(right: 20),
         margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
@@ -56,9 +57,12 @@ class UserListItem extends StatelessWidget {
               title: Text('Confirm Deletion'),
               content: Text('Are you sure you whant to delet ${user.name}?'),
               actions: [
-                TextButton(onPressed: () {
-                  Navigator.of(context).pop(false);
-                }, child: Text('Cancel')),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Text('Cancel'),
+                ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop(true);
@@ -89,7 +93,8 @@ class UserListItem extends StatelessWidget {
           ),
           title: Text(user.name, style: TextStyle(fontWeight: FontWeight.bold)),
           subtitle: Text(
-            user.courses.isNotEmpty ? user.courses[0] : '',
+            // user.courses.isNotEmpty ? user.courses[0] : '',
+            user.number,
             style: TextStyle(color: Colors.grey.shade600),
           ),
           trailing: Icon(
